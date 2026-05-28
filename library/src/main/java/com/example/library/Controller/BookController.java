@@ -31,13 +31,13 @@ public class BookController {
         return ResponseEntity.ok(bookService.findAllBooks());
     }
 
-
     @Operation(summary = "Получить книгу по ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Книга найдена"),
             @ApiResponse(responseCode = "404", description = "Книга не найдена",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(
             @Parameter(description = "UUID книги") @PathVariable UUID id) {
@@ -52,6 +52,7 @@ public class BookController {
             @ApiResponse(responseCode = "409", description = "ISBN уже существует",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+
     @PostMapping
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(bookDTO));
@@ -67,6 +68,7 @@ public class BookController {
             @ApiResponse(responseCode = "409", description = "ISBN уже существует",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+
     @PutMapping("/{id}")
     public ResponseEntity<BookDTO> updateBook(
             @Parameter(description = "UUID книги") @PathVariable UUID id,
@@ -80,6 +82,7 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Книга не найдена",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(
             @Parameter(description = "UUID книги") @PathVariable UUID id) {

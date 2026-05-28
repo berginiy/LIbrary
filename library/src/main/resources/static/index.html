@@ -37,7 +37,6 @@
     font-size: 15px;
   }
 
-  /* HEADER */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -79,7 +78,6 @@
   }
   .stat-pill strong { color: var(--ink); font-weight: 500; }
 
-  /* MAIN LAYOUT */
   main {
     max-width: 1100px;
     margin: 0 auto;
@@ -90,7 +88,6 @@
     align-items: start;
   }
 
-  /* SIDEBAR */
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -120,7 +117,6 @@
 
   .card-body { padding: 1.25rem; }
 
-  /* SEARCH FORM */
   .field { margin-bottom: 0.9rem; }
   .field:last-child { margin-bottom: 0; }
   label {
@@ -149,7 +145,6 @@
 
   .year-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-  /* BUTTONS */
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 6px; padding: 0 16px; height: 38px;
@@ -176,11 +171,9 @@
 
   .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
 
-  /* ADD BOOK FORM */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   .form-full { grid-column: 1/-1; }
 
-  /* BOOK LIST */
   .list-header {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 1rem;
@@ -195,7 +188,6 @@
     padding: 3px 10px; border-radius: 20px;
   }
 
-  /* BOOK CARD */
   .books-grid { display: flex; flex-direction: column; gap: 0.75rem; }
 
   .book-item {
@@ -239,7 +231,6 @@
 
   .book-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-  /* EDIT INLINE */
   .edit-panel {
     display: none;
     background: var(--accent-light);
@@ -250,7 +241,6 @@
   }
   .edit-panel.open { display: block; }
 
-  /* EMPTY / LOADING */
   .empty-state {
     text-align: center; padding: 3rem 1rem;
     color: var(--ink3);
@@ -271,7 +261,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* TOAST */
   #toast {
     position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
     padding: 12px 18px; border-radius: var(--radius);
@@ -303,15 +292,12 @@
   </div>
   <div class="header-stats">
     <span class="stat-pill">Всего книг: <strong id="total-count">—</strong></span>
-    <span class="stat-pill">API: <strong style="color:var(--green)">localhost:8080</strong></span>
   </div>
 </header>
 
 <main>
-  <!-- SIDEBAR -->
   <div class="sidebar">
 
-    <!-- Поиск -->
     <div class="card">
       <div class="card-header">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -341,7 +327,6 @@
       </div>
     </div>
 
-    <!-- Добавить книгу -->
     <div class="card">
       <div class="card-header">
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
@@ -375,7 +360,6 @@
 
   </div>
 
-  <!-- MAIN CONTENT -->
   <div>
     <div class="list-header">
       <span class="list-title">Каталог книг</span>
@@ -590,7 +574,6 @@ function resetSearch() {
   loadBooks();
 }
 
-// Enter to search
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && ['s-title','s-author','s-from','s-to'].includes(e.target.id)) doSearch();
 });

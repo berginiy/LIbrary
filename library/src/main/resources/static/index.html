@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Библиотека книг</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F4EF;
+    --surface: #FFFFFF;
+    --surface2: #F0EBE3;
+    --ink: #1C1714;
+    --ink2: #6B6259;
+    --ink3: #A89E94;
+    --accent: #8B4513;
+    --accent-light: #F5EDE6;
+    --accent-mid: #C4895A;
+    --border: rgba(139,69,19,0.15);
+    --border2: rgba(139,69,19,0.08);
+    --red: #C0392B;
+    --red-bg: #FDECEA;
+    --green: #27AE60;
+    --green-bg: #EAFAF1;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 2px 16px rgba(139,69,19,0.08);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 18px; height: 18px; fill: white; }
+
+  .header-stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  .stat-pill {
+    font-size: 13px;
+    color: var(--ink2);
+  }
+  .stat-pill strong { color: var(--ink); font-weight: 500; }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border2);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--border2);
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-header svg { width: 16px; height: 16px; stroke: var(--accent-mid); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  .card-body { padding: 1.25rem; }
+
+  /* SEARCH FORM */
+  .field { margin-bottom: 0.9rem; }
+  .field:last-child { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink2);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  input[type=text], input[type=number] {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  input:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(139,69,19,0.1); }
+
+  .year-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 0 16px; height: 38px;
+    border-radius: var(--radius); border: none; cursor: pointer;
+    font-family: inherit; font-size: 14px; font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--accent); color: white;
+    width: 100%;
+  }
+  .btn-primary:hover { background: #6B340E; }
+  .btn-ghost {
+    background: transparent; color: var(--ink2);
+    border: 1px solid var(--border); width: 100%;
+    margin-top: 6px;
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--ink); }
+  .btn-sm { height: 30px; padding: 0 10px; font-size: 13px; border-radius: 7px; }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(192,57,43,0.2); }
+  .btn-danger:hover { background: #FADBD8; }
+  .btn-edit { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(139,69,19,0.2); }
+  .btn-edit:hover { background: #EDD9C8; }
+
+  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+  /* ADD BOOK FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .form-full { grid-column: 1/-1; }
+
+  /* BOOK LIST */
+  .list-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .list-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 500;
+  }
+  .count-badge {
+    background: var(--accent-light); color: var(--accent);
+    font-size: 12px; font-weight: 500;
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* BOOK CARD */
+  .books-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .book-item {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    display: flex; align-items: center; gap: 1rem;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    box-shadow: var(--shadow);
+  }
+  .book-item:hover { border-color: var(--border); box-shadow: 0 4px 20px rgba(139,69,19,0.1); }
+
+  .book-spine {
+    width: 44px; height: 58px; border-radius: 4px 6px 6px 4px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600; color: white;
+    position: relative; overflow: hidden;
+  }
+  .book-spine::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .book-info { flex: 1; min-width: 0; }
+  .book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 500;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .book-author { font-size: 13px; color: var(--ink2); margin-bottom: 4px; }
+  .book-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    background: var(--surface2); color: var(--ink2); border: 1px solid var(--border2);
+  }
+
+  .book-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  /* EDIT INLINE */
+  .edit-panel {
+    display: none;
+    background: var(--accent-light);
+    border: 1px solid rgba(139,69,19,0.2);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-top: 0.5rem;
+  }
+  .edit-panel.open { display: block; }
+
+  /* EMPTY / LOADING */
+  .empty-state {
+    text-align: center; padding: 3rem 1rem;
+    color: var(--ink3);
+  }
+  .empty-state svg { width: 48px; height: 48px; stroke: var(--ink3); fill: none; stroke-width: 1.5; margin: 0 auto 1rem; display: block; }
+  .empty-state p { font-size: 14px; }
+
+  .loading {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 2rem; color: var(--ink2); font-size: 14px;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  #toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    padding: 12px 18px; border-radius: var(--radius);
+    font-size: 14px; font-weight: 500;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none; max-width: 280px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { background: var(--green-bg); color: var(--green); border: 1px solid rgba(39,174,96,0.25); }
+  #toast.error { background: var(--red-bg); color: var(--red); border: 1px solid rgba(192,57,43,0.25); }
+
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; }
+    header { padding: 0 1rem; }
+    .header-stats { display: none; }
+    main { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
+    Библиотека
+  </div>
+  <div class="header-stats">
+    <span class="stat-pill">Всего книг: <strong id="total-count">—</strong></span>
+    <span class="stat-pill">API: <strong style="color:var(--green)">localhost:8080</strong></span>
+  </div>
+</header>
+
+<main>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Поиск -->
+    <div class="card">
+      <div class="card-header">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Поиск
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label>Название</label>
+          <input type="text" id="s-title" placeholder="Война и мир..."/>
+        </div>
+        <div class="field">
+          <label>Автор</label>
+          <input type="text" id="s-author" placeholder="Толстой..."/>
+        </div>
+        <div class="field">
+          <label>Год издания</label>
+          <div class="year-row">
+            <input type="number" id="s-from" placeholder="от"/>
+            <input type="number" id="s-to" placeholder="до"/>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="doSearch()">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Найти
+        </button>
+        <button class="btn btn-ghost" onclick="resetSearch()">Сбросить фильтры</button>
+      </div>
+    </div>
+
+    <!-- Добавить книгу -->
+    <div class="card">
+      <div class="card-header">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Добавить книгу
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="field form-full">
+            <label>Название *</label>
+            <input type="text" id="a-title" placeholder="Введите название"/>
+          </div>
+          <div class="field form-full">
+            <label>Автор *</label>
+            <input type="text" id="a-author" placeholder="Имя автора"/>
+          </div>
+          <div class="field">
+            <label>Год *</label>
+            <input type="number" id="a-year" placeholder="1984"/>
+          </div>
+          <div class="field">
+            <label>ISBN *</label>
+            <input type="text" id="a-isbn" placeholder="978-..."/>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:4px" onclick="addBook()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Добавить
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div>
+    <div class="list-header">
+      <span class="list-title">Каталог книг</span>
+      <span class="count-badge" id="result-count">загрузка...</span>
+    </div>
+
+    <div id="books-container">
+      <div class="loading"><div class="spinner"></div>Загрузка...</div>
+    </div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:8080';
+
+const COLORS = [
+  '#8B4513','#5B6E45','#3A6186','#8B3A62','#4A7C7E',
+  '#7A5C3A','#6B3A8B','#3A7A5C','#8B6B3A','#3A5B8B'
+];
+function bookColor(title) {
+  let h = 0;
+  for (let c of (title||'?')) h = (h * 31 + c.charCodeAt(0)) & 0xFFFFFF;
+  return COLORS[Math.abs(h) % COLORS.length];
+}
+function initial(title) {
+  return (title||'?').trim()[0].toUpperCase();
+}
+
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => { t.className = ''; }, 3000);
+}
+
+async function fetchBooks(params={}) {
+  const qs = new URLSearchParams();
+  if (params.title) qs.set('title', params.title);
+  if (params.author) qs.set('author', params.author);
+  if (params.yearFrom) qs.set('yearFrom', params.yearFrom);
+  if (params.yearTo) qs.set('yearTo', params.yearTo);
+
+  const url = Object.keys(params).length
+    ? `${API}/books/search?${qs}`
+    : `${API}/books`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function loadBooks(params) {
+  const container = document.getElementById('books-container');
+  container.innerHTML = '<div class="loading"><div class="spinner"></div>Загрузка...</div>';
+  try {
+    const books = await fetchBooks(params);
+    document.getElementById('total-count').textContent = books.length;
+    document.getElementById('result-count').textContent = `${books.length} книг`;
+    renderBooks(books);
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <p>Ошибка загрузки: ${e.message}</p>
+    </div>`;
+  }
+}
+
+function renderBooks(books) {
+  const container = document.getElementById('books-container');
+  if (!books.length) {
+    container.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <p>Книги не найдены</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="books-grid">${books.map(b => bookCard(b)).join('')}</div>`;
+}
+
+function bookCard(b) {
+  const color = bookColor(b.title);
+  return `
+  <div id="book-${b.id}">
+    <div class="book-item">
+      <div class="book-spine" style="background:${color}">${initial(b.title)}</div>
+      <div class="book-info">
+        <div class="book-title" title="${esc(b.title)}">${esc(b.title)}</div>
+        <div class="book-author">${esc(b.author)}</div>
+        <div class="book-meta">
+          <span class="tag">${b.year} г.</span>
+          <span class="tag">ISBN: ${esc(b.isbn)}</span>
+        </div>
+      </div>
+      <div class="book-actions">
+        <button class="btn btn-sm btn-edit" onclick="toggleEdit('${b.id}','${esc(b.title)}','${esc(b.author)}',${b.year},'${esc(b.isbn)}')">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deleteBook('${b.id}')">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="edit-panel" id="edit-${b.id}">
+      <div class="form-grid" style="margin-bottom:0.75rem">
+        <div class="field form-full">
+          <label>Название</label>
+          <input type="text" id="e-title-${b.id}" value="${esc(b.title)}"/>
+        </div>
+        <div class="field form-full">
+          <label>Автор</label>
+          <input type="text" id="e-author-${b.id}" value="${esc(b.author)}"/>
+        </div>
+        <div class="field">
+          <label>Год</label>
+          <input type="number" id="e-year-${b.id}" value="${b.year}"/>
+        </div>
+        <div class="field">
+          <label>ISBN</label>
+          <input type="text" id="e-isbn-${b.id}" value="${esc(b.isbn)}"/>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:0 16px" onclick="saveEdit('${b.id}')">Сохранить</button>
+        <button class="btn btn-ghost btn-sm" style="width:auto;padding:0 16px" onclick="toggleEdit('${b.id}')">Отмена</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleEdit(id, title, author, year, isbn) {
+  const panel = document.getElementById(`edit-${id}`);
+  panel.classList.toggle('open');
+}
+
+async function saveEdit(id) {
+  const body = {
+    title:  document.getElementById(`e-title-${id}`).value.trim(),
+    author: document.getElementById(`e-author-${id}`).value.trim(),
+    year:   parseInt(document.getElementById(`e-year-${id}`).value),
+    isbn:   document.getElementById(`e-isbn-${id}`).value.trim(),
+  };
+  if (!body.title || !body.author || !body.year || !body.isbn) {
+    toast('Заполните все поля', 'error'); return;
+  }
+  try {
+    const res = await fetch(`${API}/books/${id}`, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
+    toast('Книга обновлена');
+    loadBooks();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function deleteBook(id) {
+  if (!confirm('Удалить книгу?')) return;
+  try {
+    const res = await fetch(`${API}/books/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Ошибка удаления');
+    toast('Книга удалена');
+    loadBooks();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function addBook() {
+  const body = {
+    title:  document.getElementById('a-title').value.trim(),
+    author: document.getElementById('a-author').value.trim(),
+    year:   parseInt(document.getElementById('a-year').value),
+    isbn:   document.getElementById('a-isbn').value.trim(),
+  };
+  if (!body.title || !body.author || !body.year || !body.isbn) {
+    toast('Заполните все поля', 'error'); return;
+  }
+  try {
+    const res = await fetch(`${API}/books`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
+    toast('Книга добавлена!');
+    ['a-title','a-author','a-year','a-isbn'].forEach(id => document.getElementById(id).value = '');
+    loadBooks();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function doSearch() {
+  const params = {};
+  const t = document.getElementById('s-title').value.trim();
+  const a = document.getElementById('s-author').value.trim();
+  const f = document.getElementById('s-from').value;
+  const to = document.getElementById('s-to').value;
+  if (t) params.title = t;
+  if (a) params.author = a;
+  if (f) params.yearFrom = f;
+  if (to) params.yearTo = to;
+  loadBooks(params);
+}
+
+function resetSearch() {
+  ['s-title','s-author','s-from','s-to'].forEach(id => document.getElementById(id).value = '');
+  loadBooks();
+}
+
+// Enter to search
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && ['s-title','s-author','s-from','s-to'].includes(e.target.id)) doSearch();
+});
+
+loadBooks();
+</script>
+</body>
+</html>

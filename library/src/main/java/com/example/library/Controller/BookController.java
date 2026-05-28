@@ -3,20 +3,14 @@ package com.example.library.Controller;
 import com.example.library.DTO.BookDTO;
 import com.example.library.Exception.ErrorResponse;
 import com.example.library.Service.BookService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/books")
@@ -29,12 +23,14 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @Operation(summary = "Получить все книги", description = "Возвращает список всех книг в библиотеке")
+    @Operation(summary = "Получить все книги",
+            description = "Возвращает все книги. Без фильтров — полный список.")
     @ApiResponse(responseCode = "200", description = "Список успешно получен")
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         return ResponseEntity.ok(bookService.findAllBooks());
     }
+
 
     @Operation(summary = "Получить книгу по ID")
     @ApiResponses({
@@ -91,12 +87,13 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Поиск книг", description = "Поиск по названию, автору или диапазону годов")
+    @Operation(summary = "Поиск книг",
+            description = "Поиск по названию, автору и/или диапазону годов. Параметры комбинируются (AND).")
     @ApiResponse(responseCode = "200", description = "Результаты поиска")
     @GetMapping("/search")
     public ResponseEntity<List<BookDTO>> searchBooks(
-            @Parameter(description = "Поиск по названию") @RequestParam(required = false) String title,
-            @Parameter(description = "Поиск по автору")  @RequestParam(required = false) String author,
+            @Parameter(description = "Часть названия")  @RequestParam(required = false) String title,
+            @Parameter(description = "Часть имени автора") @RequestParam(required = false) String author,
             @Parameter(description = "Год от")           @RequestParam(required = false) Integer yearFrom,
             @Parameter(description = "Год до")           @RequestParam(required = false) Integer yearTo) {
         return ResponseEntity.ok(bookService.searchBooks(title, author, yearFrom, yearTo));

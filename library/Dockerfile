@@ -1,17 +1,35 @@
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+# ─── Stage 1: Build ───────────────────────────────────────────────────────────
+FROM eclipse-temurin:17-jdk-alpine AS builder
+
 WORKDIR /app
 
+# Сначала копируем только pom.xml — Docker закеширует зависимости
+# и не будет их качать при каждом изменении кода
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN ./mvnw dependency:go-offline -q 2>/dev/null || true
 
+COPY .mvn .mvn
+COPY mvnw .
+RUN chmod +x mvnw
+
+# Докачиваем зависимости через mvnw
+RUN ./mvnw dependency:go-offline -q
+
+# Копируем исходники и собираем JAR (без запуска тестов — они для CI)
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN ./mvnw package -DskipTests -q
 
+# ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM eclipse-temurin:17-jre-alpine
+
+# Создаём непривилегированного пользователя
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 WORKDIR /app
+USER appuser
 
-COPY --from=build /app/target/*.jar app.jar
+# Копируем только собранный JAR — образ остаётся маленьким
+COPY --from=builder /app/target/book-management-*.jar app.jar
 
-EXPOSE 10000
+EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dserver.port=10000", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
